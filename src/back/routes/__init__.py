@@ -13,52 +13,11 @@ main_router = APIRouter(prefix="/well_model", tags=["WellModel"])
 
 
 @main_router.put("/calc", response_model=WellModelCalcResponse)
-async def my_profile(data: WellModelCalcRequest):
-    return {
-  "vlp": {
-    "q_liq": [
-      0,
-      30,
-      60,
-      90,
-      120,
-      150
-    ],
-    "p_wf": [
-      200,
-      190,
-      180,
-      175,
-      185,
-      200
-    ]
-  },
-  "ipr": {
-    "q_liq": [
-      0,
-      30,
-      60,
-      90,
-      120,
-      150
-    ],
-    "p_wf": [
-      200,
-      180,
-      160,
-      140,
-      120,
-      100
-    ]
-  },
-  "nodal": [
-    {
-      "p_wf": 150,
-      "q_liq": 100
-    },
-    {
-      "p_wf": 160,
-      "q_liq": 90
-    }
-  ]
-}
+async def put_well(data: WellModelCalcRequest):
+    vlp_data = form_vlp_request(data)
+    ipr_data = form_ipr_request(data)
+    vlp_response = requests.post('http://localhost:8001/vlp/calc', json=vlp_data)
+    ipr_response = requests.post('http://localhost:8002/ipr/calc', json=ipr_data)
+    nodal_data = form_nodal_request(vlp_response.json(), ipr_response.json())
+    nodal_response = requests.post('http://localhost:8003/nodal/calc', json=nodal_data)
+    return WellModelCalcResponse(ipr=ipr_response.json(), vlp=vlp_response.json(), nodal=nodal_response.json())
