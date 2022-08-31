@@ -16,6 +16,6 @@
 2. собрать контейнер с переменной окружения BACKEND_HOST \
 `docker run --env BACKEND_HOST='хост:порт' -d -p 3002:8080 ид_контейнера`
 3. Например:
-`docker run --env BACKEND_HOST='127.0.0.1:8004' -d -p 3002:8080 1fb6ac0196b5`
+`docker run --env BACKEND_HOST='172.27.128.1:8004' -d -p 3002:8080 4c2c1004bb81`
 4. проверить по [http://localhost:3002](http://localhost:3002)
 
